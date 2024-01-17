@@ -1,6 +1,6 @@
 # Andrew Boza - Air Code Challenge
 
-I cut myself off with 20min to spare to write this summary of my approach to this code challenge.
+I cut myself off early to write this summary of my approach to this code challenge.
 
 After reading the brief I immediately added the [shadcn](https://ui.shadcn.com/) CLI so that I could have quick access to ready-made and accessible components but still have the flexibility to adjust styling with Tailwind. The other thing I did was add [tPRC](https://trpc.io/) which is my favorite way to communicate between client and server. I _could_ have called out to your APIs directly from the client, but I'm accustomed to using the server code in the Next app to talk to other services.
 

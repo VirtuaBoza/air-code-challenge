@@ -14,9 +14,10 @@ import {
 } from "@/components/ui/context-menu";
 import { DownloadIcon, ExpandIcon } from "lucide-react";
 import useResizeObserver from "use-resize-observer";
+import { useEffect, useRef } from "react";
 
 export function AssetsSection() {
-  const { data, hasNextPage, fetchNextPage } =
+  const { data, hasNextPage, fetchNextPage, isFetchedAfterMount } =
     trpc.assets.getAll.useInfiniteQuery(
       {},
       {
@@ -24,6 +25,14 @@ export function AssetsSection() {
         initialCursor: null,
       }
     );
+
+  const didInitLoad = useRef(false);
+  useEffect(() => {
+    if (isFetchedAfterMount && hasNextPage && !didInitLoad.current) {
+      fetchNextPage();
+      didInitLoad.current = true;
+    }
+  }, [isFetchedAfterMount, hasNextPage, fetchNextPage]);
 
   const assets = data?.pages.flatMap((page) => page.data.clips) || [];
   const { ref, width = 0 } = useResizeObserver();
