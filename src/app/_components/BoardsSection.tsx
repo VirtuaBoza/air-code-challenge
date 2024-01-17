@@ -24,7 +24,13 @@ import { Button } from "@/components/ui/button";
 import { DownloadIcon, MoreHorizontalIcon } from "lucide-react";
 import { Board } from "../api/boards";
 
-export function BoardsSection() {
+export function BoardsSection({
+  onSelect,
+  selectedIds,
+}: {
+  selectedIds: Record<string, boolean>;
+  onSelect: (id: string, force?: boolean) => void;
+}) {
   const { data, isLoading } = trpc.boards.getAll.useQuery();
   return (
     <div className="pb-8">
@@ -37,15 +43,33 @@ export function BoardsSection() {
                 <Skeleton key={i} className="h-48 w-48 rounded-md shrink-0" />
               ))
           : (data?.data || []).map((board) => {
-              return <BoardThumbnail key={board.id} board={board} />;
+              return (
+                <BoardThumbnail
+                  key={board.id}
+                  board={board}
+                  onSelect={onSelect}
+                  selectedIds={selectedIds}
+                />
+              );
             })}
       </div>
     </div>
   );
 }
 
-function BoardThumbnail({ board }: { board: Board }) {
+function BoardThumbnail({
+  board,
+  onSelect,
+  selectedIds,
+}: {
+  board: Board;
+  selectedIds: Record<string, boolean>;
+  onSelect: (id: string, force?: boolean) => void;
+}) {
   const thumbnail = board.thumbnails?.[0];
+  const selectedItemId = Object.entries(selectedIds)
+    .filter(([k, v]) => v)
+    .map(([k]) => k);
 
   return (
     <div
@@ -62,7 +86,7 @@ function BoardThumbnail({ board }: { board: Board }) {
           priority
         />
       )}
-      <ContextMenu>
+      <ContextMenu onOpenChange={() => {}}>
         <ContextMenuTrigger>
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 flex flex-col justify-between p-4 opacity-0 hover:opacity-100">
             <div className="flex justify-end">
@@ -73,7 +97,10 @@ function BoardThumbnail({ board }: { board: Board }) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
-                  <DropdownMenuLabel>1 Board Selected</DropdownMenuLabel>
+                  <DropdownMenuLabel>
+                    {selectedItemId.length} Item
+                    {selectedItemId.length === 1 ? "" : "s"} Selected
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <a
@@ -96,7 +123,10 @@ function BoardThumbnail({ board }: { board: Board }) {
           </div>
         </ContextMenuTrigger>
         <ContextMenuContent className="w-56">
-          <ContextMenuLabel>1 Board Selected</ContextMenuLabel>
+          <ContextMenuLabel>
+            {selectedItemId.length} Item
+            {selectedItemId.length === 1 ? "" : "s"} Selected
+          </ContextMenuLabel>
           <ContextMenuSeparator />
           <ContextMenuItem>
             <a

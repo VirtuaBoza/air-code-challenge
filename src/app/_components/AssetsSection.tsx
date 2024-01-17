@@ -27,7 +27,13 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 
-export function AssetsSection() {
+export function AssetsSection({
+  selectedIds,
+  onSelect,
+}: {
+  selectedIds: Record<string, boolean>;
+  onSelect: (id: string, force?: boolean) => void;
+}) {
   const { data, hasNextPage, fetchNextPage, isFetchedAfterMount } =
     trpc.assets.getAll.useInfiniteQuery(
       {},
@@ -68,20 +74,40 @@ export function AssetsSection() {
         )}
       >
         {assets.map((clip) => (
-          <Thumbnail key={clip.assetId} clip={clip} />
+          <Thumbnail
+            key={clip.assetId}
+            clip={clip}
+            selectedIds={selectedIds}
+            onSelect={onSelect}
+          />
         ))}
       </InfiniteScroll>
     </div>
   );
 }
 
-function Thumbnail({ clip }: { clip: Clip }) {
+function Thumbnail({
+  clip,
+  selectedIds,
+  onSelect,
+}: {
+  clip: Clip;
+  selectedIds: Record<string, boolean>;
+  onSelect: (id: string, force?: boolean) => void;
+}) {
+  const selectedItemId = Object.entries(selectedIds)
+    .filter(([k, v]) => v)
+    .map(([k]) => k);
   return (
     <div
       className={cn(
-        "rounded-md overflow-hidden relative",
-        clip.width / clip.height > 1 && "col-span-2"
+        "rounded-md overflow-hidden relative p-2",
+        clip.width / clip.height > 1 && "col-span-2",
+        selectedIds[clip.assetId] && "bg-blue-100"
       )}
+      onClick={() => {
+        onSelect(clip.assetId);
+      }}
     >
       <Image
         className="object-cover w-full h-full"
@@ -91,18 +117,29 @@ function Thumbnail({ clip }: { clip: Clip }) {
         width={400}
         priority
       />
-      <ContextMenu>
+      <ContextMenu
+        onOpenChange={() => {
+          onSelect(clip.assetId);
+        }}
+      >
         <ContextMenuTrigger>
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 flex flex-col justify-between p-4 opacity-0 hover:opacity-100">
             <div className="flex justify-end">
-              <DropdownMenu>
+              <DropdownMenu
+                onOpenChange={() => {
+                  onSelect(clip.assetId);
+                }}
+              >
                 <DropdownMenuTrigger asChild>
                   <Button size={"icon"}>
                     <MoreHorizontalIcon />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
-                  <DropdownMenuLabel>1 Item Selected</DropdownMenuLabel>
+                  <DropdownMenuLabel>
+                    {selectedItemId.length} Item
+                    {selectedItemId.length === 1 ? "" : "s"} Selected
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <a
@@ -141,7 +178,10 @@ function Thumbnail({ clip }: { clip: Clip }) {
           </div>
         </ContextMenuTrigger>
         <ContextMenuContent className="w-56">
-          <ContextMenuLabel>1 Item Selected</ContextMenuLabel>
+          <ContextMenuLabel>
+            {selectedItemId.length} Item
+            {selectedItemId.length === 1 ? "" : "s"} Selected
+          </ContextMenuLabel>
           <ContextMenuSeparator />
           <ContextMenuItem>
             <a className="flex" href={clip.assets.original} target="_blank">

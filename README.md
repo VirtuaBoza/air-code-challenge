@@ -12,6 +12,6 @@ Then I tried looking into the @air/react-drag-to-select package to see what was 
 
 Finally, I decided to add the ellipsis menu button to the boards and assets.
 
-If I had a little more time, I would add some state to store selected boards/assets so that I could take another pass at the context menu and ellipsis menu and have it be aware of how many items have been selected. That would lay the groundwork for use of @air/react-drag-to-select as well.
+With my last remaining time, I added some state to store selected boards/assets so that I could take another pass at the context menu and ellipsis menu and have it be aware of how many items have been selected.
 
 I must say, I would NOT ship this to customers as-is (lol). The way the images pop-in is not ideal, and they aren't always laid out perfectly with the new grid design I came up with. I'd be curious about what your code looks like to allow your thumbnails to load quickly and layout cleanly.
