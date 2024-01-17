@@ -1,25 +1,8 @@
-import { publicProcedure, router } from "../trpc";
-import { fetchBoards } from "@/app/api/boards";
-import { fetchAssets } from "@/app/api/clips";
-import { z } from "zod";
+import { router } from "../trpc";
+import boards from "./boards";
+import assets from "./assets";
 
 export const rootRouter = router({
-  boards: router({
-    getAll: publicProcedure.query(() => {
-      return fetchBoards();
-    }),
-  }),
-  assets: router({
-    getAll: publicProcedure
-      .input(
-        z.object({
-          cursor: z.string().nullable().optional(),
-        })
-      )
-      .query(({ input }) => {
-        return fetchAssets({
-          cursor: input.cursor || null,
-        });
-      }),
-  }),
+  boards,
+  assets,
 });
