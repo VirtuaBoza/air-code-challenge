@@ -43,17 +43,26 @@ function Thumbnail({ clip }: { clip: Clip }) {
   return (
     <div
       className={cn(
-        "rounded-md overflow-hidden",
+        "rounded-md overflow-hidden relative",
         clip.width / clip.height > 1 && "col-span-2"
       )}
     >
       <Image
         className="object-cover w-full h-full"
-        alt={clip.title || "asset"}
+        alt={clip.importedName || "Untitled asset"}
         src={clip.assets.image}
         height={400}
         width={400}
       />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 flex flex-col justify-end p-4 opacity-0 hover:opacity-100">
+        <p className="text-primary-foreground font-medium truncate">
+          {clip.importedName}
+        </p>
+        <p className="text-primary-foreground uppercase text-sm truncate">
+          {clip.ext} · {Math.round(clip.size / 1_000_000)} MB · {clip.width} x{" "}
+          {clip.height}
+        </p>
+      </div>
     </div>
   );
 }
