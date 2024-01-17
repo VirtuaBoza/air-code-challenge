@@ -1,28 +1,11 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Andrew Boza - Air Code Challenge
 
-## Getting Started
+I cut myself off with 20min to spare to write this summary of my approach to this code challenge.
 
-First, install the dependencies:
+After reading the brief I immediately added the [shadcn](https://ui.shadcn.com/) CLI so that I could have quick access to ready-made and accessible components but still have the flexibility to adjust styling with Tailwind. The other thing I did was add [tPRC](https://trpc.io/) which is my favorite way to communicate between client and server. I _could_ have called out to your APIs directly from the client, but I'm accustomed to using the server code in the Next app to talk to other services.
 
-```bash
-npm i
-```
+One thing that scared me a bit from the prompt was the focus performance as evaluation criteria. I've never actually been involved in a project where performance was a significant concern to be honest. I find that many developers are more concerned with performance than maintainability, and I tend to focus on the latter. So one decision I made to try to ensure the app was performant was to prefer a CSS-based solution to a JS-based solution when it came to the layout of the image grids. Therefore, you'll notice that my grids behave differently than yours - most notably when it comes to the assets. I decided to change the design to allow me to more easily create a visually pleasing grid which involved rendering a grid with 3, 6, or 9 columns (depending on container width) and images that are wider than they are tall consume 2 columns. Pretty simple but I think it looks nice.
 
-Then, run the development server:
+After getting the basic layout replication in place I had some extra time, so I added a context menu (right-click) for each asset which either opens the image in a new tab or (pretends) to download the image.
 
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+I must say, I would NOT ship this to customers as-is lol. The way the images pop-in is not ideal, and they aren't always laid out perfectly with the new grid design I came up with. I'd be curious about what your code looks like to allow your thumbnails to load quickly and layout cleanly.
