@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { DownloadIcon, MoreHorizontalIcon } from "lucide-react";
 import { Board } from "../api/boards";
+import { cn } from "@/lib/utils";
 
 export function BoardsSection({
   onSelect,
@@ -74,7 +75,13 @@ function BoardThumbnail({
   return (
     <div
       key={board.id}
-      className="h-48 w-48 rounded-md overflow-hidden relative shrink-0"
+      className={cn(
+        "h-48 w-48 rounded-md overflow-hidden relative shrink-0 p-2",
+        selectedIds[board.id] && "bg-blue-100"
+      )}
+      onClick={() => {
+        onSelect(board.id);
+      }}
     >
       {thumbnail && (
         <Image
@@ -86,11 +93,19 @@ function BoardThumbnail({
           priority
         />
       )}
-      <ContextMenu onOpenChange={() => {}}>
+      <ContextMenu
+        onOpenChange={() => {
+          onSelect(board.id, true);
+        }}
+      >
         <ContextMenuTrigger>
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 flex flex-col justify-between p-4 opacity-0 hover:opacity-100">
             <div className="flex justify-end">
-              <DropdownMenu>
+              <DropdownMenu
+                onOpenChange={() => {
+                  onSelect(board.id, true);
+                }}
+              >
                 <DropdownMenuTrigger asChild>
                   <Button size={"icon"}>
                     <MoreHorizontalIcon />

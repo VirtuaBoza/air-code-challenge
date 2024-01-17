@@ -119,7 +119,7 @@ function Thumbnail({
       />
       <ContextMenu
         onOpenChange={() => {
-          onSelect(clip.assetId);
+          onSelect(clip.assetId, true);
         }}
       >
         <ContextMenuTrigger>
@@ -127,7 +127,7 @@ function Thumbnail({
             <div className="flex justify-end">
               <DropdownMenu
                 onOpenChange={() => {
-                  onSelect(clip.assetId);
+                  onSelect(clip.assetId, true);
                 }}
               >
                 <DropdownMenuTrigger asChild>
