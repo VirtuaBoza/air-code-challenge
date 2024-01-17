@@ -1,43 +1,15 @@
 "use client";
 
-import { trpc } from "@/lib/trpc.client";
+import { BoardsSection } from "./_components/BoardsSection";
+import { AssetsSection } from "./_components/AssetsSection";
+import { useRef } from "react";
 
 export default function Home() {
+  const scrollContainer = useRef<HTMLElement>(null);
   return (
-    <main>
+    <main ref={scrollContainer} className="py-8 px-12 overflow-y-auto">
       <BoardsSection />
       <AssetsSection />
     </main>
-  );
-}
-
-function SectionHeader({ label }: { label: string }) {
-  return (
-    <h2 className="font-semibold leading-none tracking-tight uppercase">
-      {label}
-    </h2>
-  );
-}
-
-function BoardsSection() {
-  const { data } = trpc.boards.getAll.useQuery();
-  return (
-    <div>
-      <SectionHeader label={`Boards${!data ? "" : ` (${data.total})`}`} />
-      {/* <pre>{JSON.stringify(data, undefined, 2)}</pre> */}
-    </div>
-  );
-}
-
-function AssetsSection() {
-  const { data } = trpc.assets.getAll.useQuery({
-    cursor: null,
-  });
-  console.log(data?.data.clips.length);
-  return (
-    <div>
-      <SectionHeader label={`Assets${data ? ` (${data.data.total})` : ""}`} />
-      <pre>{JSON.stringify(data, undefined, 2)}</pre>
-    </div>
   );
 }

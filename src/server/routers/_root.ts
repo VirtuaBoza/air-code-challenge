@@ -13,12 +13,12 @@ export const rootRouter = router({
     getAll: publicProcedure
       .input(
         z.object({
-          cursor: z.string().nullable(),
+          cursor: z.string().nullable().optional(),
         })
       )
       .query(({ input }) => {
         return fetchAssets({
-          cursor: input.cursor,
+          cursor: input.cursor || null,
         });
       }),
   }),
