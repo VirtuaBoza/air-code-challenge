@@ -9,6 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.17.15",
+    "@trpc/client": "^11.0.0-next-beta.193",
+    "@trpc/next": "^11.0.0-next-beta.193",
+    "@trpc/react-query": "^11.0.0-next-beta.193",
+    "@trpc/server": "^11.0.0-next-beta.193",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.311.0",
@@ -16,7 +21,8 @@
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.2.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20",
