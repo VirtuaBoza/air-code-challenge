@@ -2,7 +2,6 @@
 
 import { trpc } from "@/lib/trpc.client";
 import { SectionHeader } from "./SectionHeader";
-import useResizeObserver from "use-resize-observer";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Clip } from "../api/clips";
 import { cn } from "@/lib/utils";
@@ -18,15 +17,10 @@ export function AssetsSection() {
       }
     );
 
-  const { ref } = useResizeObserver();
-
   const assets = data?.pages.flatMap((page) => page.data.clips) || [];
-  const groupedAssets = assets.reduce((acc, cur) => {
-    return acc;
-  }, [] as Clip[][]);
 
   return (
-    <div ref={ref}>
+    <div>
       <SectionHeader
         label={`Assets${data ? ` (${data.pages[0].data.total})` : ""}`}
       />
