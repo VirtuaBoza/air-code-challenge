@@ -4,6 +4,25 @@ import { trpc } from "@/lib/trpc.client";
 import { SectionHeader } from "./SectionHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { DownloadIcon, MoreHorizontalIcon } from "lucide-react";
+import { Board } from "../api/boards";
 
 export function BoardsSection() {
   const { data, isLoading } = trpc.boards.getAll.useQuery();
@@ -18,31 +37,81 @@ export function BoardsSection() {
                 <Skeleton key={i} className="h-48 w-48 rounded-md shrink-0" />
               ))
           : (data?.data || []).map((board) => {
-              const thumbnail = board.thumbnails?.[0];
-              return (
-                <div
-                  key={board.id}
-                  className="h-48 w-48 rounded-md overflow-hidden relative shrink-0"
-                >
-                  {thumbnail && (
-                    <Image
-                      className="object-cover w-full h-full"
-                      alt={board.title}
-                      src={thumbnail}
-                      height={400}
-                      width={400}
-                      priority
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 flex flex-col justify-end p-4">
-                    <p className="text-primary-foreground font-semibold text-lg">
-                      {board.title}
-                    </p>
-                  </div>
-                </div>
-              );
+              return <BoardThumbnail key={board.id} board={board} />;
             })}
       </div>
+    </div>
+  );
+}
+
+function BoardThumbnail({ board }: { board: Board }) {
+  const thumbnail = board.thumbnails?.[0];
+
+  return (
+    <div
+      key={board.id}
+      className="h-48 w-48 rounded-md overflow-hidden relative shrink-0"
+    >
+      {thumbnail && (
+        <Image
+          className="object-cover w-full h-full"
+          alt={board.title}
+          src={thumbnail}
+          height={400}
+          width={400}
+          priority
+        />
+      )}
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 flex flex-col justify-between p-4 opacity-0 hover:opacity-100">
+            <div className="flex justify-end">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size={"icon"}>
+                    <MoreHorizontalIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuLabel>1 Board Selected</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <a
+                      className="flex"
+                      href={"#"}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        alert("Pretend this was successful.");
+                      }}
+                    >
+                      <DownloadIcon className="mr-2 h-4 w-4" /> Download
+                    </a>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <p className="text-primary-foreground font-semibold text-lg">
+              {board.title}
+            </p>
+          </div>
+        </ContextMenuTrigger>
+        <ContextMenuContent className="w-56">
+          <ContextMenuLabel>1 Board Selected</ContextMenuLabel>
+          <ContextMenuSeparator />
+          <ContextMenuItem>
+            <a
+              className="flex"
+              href={"#"}
+              onClick={(e) => {
+                e.preventDefault();
+                alert("Pretend this was successful.");
+              }}
+            >
+              <DownloadIcon className="mr-2 h-4 w-4" /> Download
+            </a>
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
     </div>
   );
 }

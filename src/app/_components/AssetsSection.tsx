@@ -11,10 +11,21 @@ import {
   ContextMenuItem,
   ContextMenu,
   ContextMenuTrigger,
+  ContextMenuLabel,
+  ContextMenuSeparator,
 } from "@/components/ui/context-menu";
-import { DownloadIcon, ExpandIcon } from "lucide-react";
+import { DownloadIcon, ExpandIcon, MoreHorizontalIcon } from "lucide-react";
 import useResizeObserver from "use-resize-observer";
 import { useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
 
 export function AssetsSection() {
   const { data, hasNextPage, fetchNextPage, isFetchedAfterMount } =
@@ -74,7 +85,7 @@ function Thumbnail({ clip }: { clip: Clip }) {
     >
       <Image
         className="object-cover w-full h-full"
-        alt={clip.importedName || "Untitled asset"}
+        alt={clip.importedName || "Unnamed asset"}
         src={clip.assets.image}
         height={400}
         width={400}
@@ -82,17 +93,56 @@ function Thumbnail({ clip }: { clip: Clip }) {
       />
       <ContextMenu>
         <ContextMenuTrigger>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 flex flex-col justify-end p-4 opacity-0 hover:opacity-100">
-            <p className="text-primary-foreground font-medium truncate">
-              {clip.importedName}
-            </p>
-            <p className="text-primary-foreground uppercase text-sm truncate">
-              {clip.ext} · {Math.round(clip.size / 1_000_000)} MB · {clip.width}{" "}
-              x {clip.height}
-            </p>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 flex flex-col justify-between p-4 opacity-0 hover:opacity-100">
+            <div className="flex justify-end">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size={"icon"}>
+                    <MoreHorizontalIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuLabel>1 Item Selected</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <a
+                      className="flex"
+                      href={clip.assets.original}
+                      target="_blank"
+                    >
+                      <ExpandIcon className="mr-2 h-4 w-4" /> Open
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <a
+                      className="flex"
+                      download={clip.importedName}
+                      href={clip.assets.original}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        alert("Pretend this was successful.");
+                      }}
+                    >
+                      <DownloadIcon className="mr-2 h-4 w-4" /> Download
+                    </a>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div>
+              <p className="text-primary-foreground font-medium truncate">
+                {clip.importedName}
+              </p>
+              <p className="text-primary-foreground uppercase text-sm truncate">
+                {clip.ext} · {Math.round(clip.size / 1_000_000)} MB ·{" "}
+                {clip.width} x {clip.height}
+              </p>
+            </div>
           </div>
         </ContextMenuTrigger>
-        <ContextMenuContent>
+        <ContextMenuContent className="w-56">
+          <ContextMenuLabel>1 Item Selected</ContextMenuLabel>
+          <ContextMenuSeparator />
           <ContextMenuItem>
             <a className="flex" href={clip.assets.original} target="_blank">
               <ExpandIcon className="mr-2 h-4 w-4" /> Open
