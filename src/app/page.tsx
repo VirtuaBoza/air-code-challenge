@@ -3,7 +3,7 @@ import { AssetsSection } from "./_components/AssetsSection";
 
 export default function Home() {
   return (
-    <main className="py-8 px-12 overflow-y-auto">
+    <main className="py-8 px-12">
       <BoardsSection />
       <AssetsSection />
     </main>
