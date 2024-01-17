@@ -13,6 +13,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { DownloadIcon, ExpandIcon } from "lucide-react";
+import useResizeObserver from "use-resize-observer";
 
 export function AssetsSection() {
   const { data, hasNextPage, fetchNextPage } =
@@ -25,9 +26,10 @@ export function AssetsSection() {
     );
 
   const assets = data?.pages.flatMap((page) => page.data.clips) || [];
+  const { ref, width = 0 } = useResizeObserver();
 
   return (
-    <div>
+    <div ref={ref}>
       <SectionHeader
         label={`Assets${data ? ` (${data.pages[0].data.total})` : ""}`}
       />
@@ -36,7 +38,14 @@ export function AssetsSection() {
         hasMore={hasNextPage}
         loader={"..."}
         next={() => fetchNextPage()}
-        className="grid grid-cols-6 gap-6"
+        className={cn(
+          "grid grid-cols-6 gap-6",
+          width > 1200
+            ? "grid-cols-9"
+            : width > 800
+            ? "grid-cols-6"
+            : "grid-cols-3"
+        )}
       >
         {assets.map((clip) => (
           <Thumbnail key={clip.assetId} clip={clip} />
