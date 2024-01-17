@@ -31,6 +31,7 @@ export function BoardsSection() {
                       src={thumbnail}
                       height={400}
                       width={400}
+                      priority
                     />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 flex flex-col justify-end p-4">

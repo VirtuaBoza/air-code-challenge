@@ -6,6 +6,13 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Clip } from "../api/clips";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import {
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenu,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import { DownloadIcon, ExpandIcon } from "lucide-react";
 
 export function AssetsSection() {
   const { data, hasNextPage, fetchNextPage } =
@@ -53,16 +60,41 @@ function Thumbnail({ clip }: { clip: Clip }) {
         src={clip.assets.image}
         height={400}
         width={400}
+        priority
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 flex flex-col justify-end p-4 opacity-0 hover:opacity-100">
-        <p className="text-primary-foreground font-medium truncate">
-          {clip.importedName}
-        </p>
-        <p className="text-primary-foreground uppercase text-sm truncate">
-          {clip.ext} · {Math.round(clip.size / 1_000_000)} MB · {clip.width} x{" "}
-          {clip.height}
-        </p>
-      </div>
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20 flex flex-col justify-end p-4 opacity-0 hover:opacity-100">
+            <p className="text-primary-foreground font-medium truncate">
+              {clip.importedName}
+            </p>
+            <p className="text-primary-foreground uppercase text-sm truncate">
+              {clip.ext} · {Math.round(clip.size / 1_000_000)} MB · {clip.width}{" "}
+              x {clip.height}
+            </p>
+          </div>
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem>
+            <a className="flex" href={clip.assets.original} target="_blank">
+              <ExpandIcon className="mr-2 h-4 w-4" /> Open
+            </a>
+          </ContextMenuItem>
+          <ContextMenuItem>
+            <a
+              className="flex"
+              download={clip.importedName}
+              href={clip.assets.original}
+              onClick={(e) => {
+                e.preventDefault();
+                alert("Pretend this was successful.");
+              }}
+            >
+              <DownloadIcon className="mr-2 h-4 w-4" /> Download
+            </a>
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
     </div>
   );
 }
